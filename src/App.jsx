@@ -37,7 +37,7 @@ export default function App() {
       case 1:
         return (
           <IPInputPage 
-            onNext={() => setCurrentStep(2)} 
+            onConnect={() => setCurrentStep(2)} 
             ipAddress={ipAddress} 
             setIpAddress={setIpAddress} 
           />
