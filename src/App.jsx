@@ -1,44 +1,36 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 
-const Header = ({ isConnected, deviceName = 'Living Room TV', toggleTheme, isDarkMode }) => (
-  <header className="header">
-    <div className="logo-container">
-      <div className="logo">A</div>
-      <span className="logo-text">Arcto</span>
-    </div>
-    <div className="header-title">
-      <h1>MediaControl</h1>
-      <div className="connection-status">
-        <div className={`status-indicator ${isConnected ? 'connected' : 'disconnected'}`} />
-        <span>{isConnected ? `Connected to: ${deviceName}` : 'Disconnected'}</span>
+const Header = ({ isConnected, toggleTheme, isDarkMode }) => {
+  return (
+    <header className="header">
+      <div className="logo-container">
+        <img src="/arcto.png" alt="Arcto Logo" className="logo-image" />
       </div>
-    </div>
-    <button 
-      className="theme-toggle" 
-      onClick={toggleTheme}
-      aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-    >
-      {isDarkMode ? (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-      ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      )}
-    </button>
-  </header>
-);
+      
+      <div className="connection-status">
+        <div className={`status-indicator ${isConnected ? 'connected' : 'disconnected'}`}></div>
+        {isConnected ? 'Connected' : 'Disconnected'}
+      </div>
+      
+      <button 
+        className="theme-toggle" 
+        onClick={toggleTheme}
+        aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        {isDarkMode ? (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+            <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+          </svg>
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+            <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clipRule="evenodd" />
+          </svg>
+        )}
+      </button>
+    </header>
+  );
+};
 
 const MediaSelector = ({ disabled, selectedMedia, setSelectedMedia }) => (
   <div className="media-control">
@@ -191,6 +183,8 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', !isDarkMode ? 'dark' : 'light');
     // Add a subtle animation to the body when theme changes
     document.body.style.transition = 'background-color 0.5s ease';
+    // Keep the logo background color consistent
+    document.querySelector('.logo-container').style.backgroundColor = '#1f2937';
   };
 
   const handlePlayMedia = () => {
@@ -201,6 +195,16 @@ export default function App() {
     const playButton = document.querySelector('.play-button');
     playButton.classList.add('playing');
     setTimeout(() => playButton.classList.remove('playing'), 800);
+    
+    // Add ripple effect to the button
+    const ripple = document.createElement('span');
+    ripple.classList.add('ripple-effect');
+    playButton.appendChild(ripple);
+    
+    // Remove the ripple after animation completes
+    setTimeout(() => {
+      ripple.remove();
+    }, 1000);
   };
 
   return (
