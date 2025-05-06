@@ -1,0 +1,26 @@
+{
+  "name": "Arcto - Modern Presentation Remote Control",
+  "short_name": "Arcto",
+  "description": "Control your presentations with ease using Arcto, the modern remote control app for presentations and media.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/arcto.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/arcto-large.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
