@@ -45,9 +45,24 @@ const Home: React.FC = () => {
         initial="hidden"
         animate={heroInView ? "visible" : "hidden"}
         variants={staggerContainer}
-        className="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20"
+        className="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20 overflow-hidden"
       >
-        <motion.div variants={fadeIn} className="absolute top-0 right-0 -z-10 opacity-20 dark:opacity-10">
+        {/* Animated background elements */}
+        <motion.div 
+          className="absolute top-0 left-0 w-full h-full -z-10 opacity-20 dark:opacity-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5 }}
+        >
+          <div className="absolute top-10 right-10 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+          <div className="absolute top-0 -left-4 w-72 h-72 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+        </motion.div>
+        
+        <motion.div 
+          variants={fadeIn} 
+          className="absolute top-0 right-0 -z-10 opacity-20 dark:opacity-10"
+        >
           <svg width="404" height="404" fill="none" viewBox="0 0 404 404">
             <defs>
               <pattern id="pattern-circles" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -58,14 +73,27 @@ const Home: React.FC = () => {
           </svg>
         </motion.div>
         
-        <motion.div variants={fadeIn} className="text-center mb-12">
+        <motion.div variants={fadeIn} className="text-center mb-12 relative z-10">
           <motion.div 
             className="flex justify-center mb-8"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", stiffness: 100, delay: 0.1 }}
           >
-            <img src="/arcto.png" alt="Arcto Logo" className="w-24 h-24 rounded-xl shadow-lg" />
+            <motion.div
+              className="relative"
+              whileHover={{ rotate: 5 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <motion.div 
+                className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient-xy"
+                animate={{ 
+                  boxShadow: ["0 0 0 0 rgba(59, 130, 246, 0)", "0 0 20px 5px rgba(59, 130, 246, 0.5)", "0 0 0 0 rgba(59, 130, 246, 0)"] 
+                }}
+                transition={{ repeat: Infinity, duration: 3 }}
+              />
+              <img src="/arcto.png" alt="Arcto Logo" className="relative w-24 h-24 rounded-xl shadow-lg bg-white dark:bg-gray-800" />
+            </motion.div>
           </motion.div>
           <motion.h1 
             className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4"
@@ -73,7 +101,7 @@ const Home: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-500">Arcto</span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-500 animate-gradient-x">Arcto</span>
           </motion.h1>
           <motion.p 
             className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
@@ -87,51 +115,189 @@ const Home: React.FC = () => {
         
         <motion.div 
           variants={fadeIn} 
-          className="flex flex-col sm:flex-row gap-4 mt-8"
+          className="flex flex-col sm:flex-row gap-4 mt-8 z-10"
         >
           <motion.a 
             href="/downloads/arcto-setup.exe" 
-            className="px-8 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-500 text-white font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center"
-            whileHover={{ scale: 1.05 }}
+            className="group px-8 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-500 text-white font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
+            whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.5)" }}
             whileTap={{ scale: 0.95 }}
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Download for Windows
+            <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
+            <motion.span 
+              className="relative flex items-center"
+              initial={{ x: 0 }}
+              whileHover={{ x: 5 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <svg className="w-5 h-5 mr-2 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Download for Windows
+            </motion.span>
           </motion.a>
           <motion.a 
             href="#how-it-works" 
-            className="px-8 py-3 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-medium shadow border border-gray-200 dark:border-gray-700 hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center"
-            whileHover={{ scale: 1.05 }}
+            className="group px-8 py-3 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-medium shadow border border-gray-200 dark:border-gray-700 hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
+            whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.3)" }}
             whileTap={{ scale: 0.95 }}
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Learn More
+            <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-blue-500 rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
+            <motion.span 
+              className="relative flex items-center"
+              initial={{ x: 0 }}
+              whileHover={{ x: 5 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Learn More
+            </motion.span>
           </motion.a>
         </motion.div>
         
         <motion.div 
           variants={fadeIn} 
-          className="mt-16 relative w-full max-w-4xl mx-auto"
+          className="mt-16 relative w-full max-w-4xl mx-auto z-10"
         >
-          <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-700">
-            <img 
-              src="/images/arcto-preview.png" 
-              alt="Arcto App Preview" 
-              className="w-full h-auto"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-          </div>
-          <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 px-6 py-2 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 flex items-center">
+          <motion.div 
+            className="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+            whileHover={{ y: -5 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            {/* Window-like component for app preview */}
+            <div className="bg-gray-100 dark:bg-gray-700 p-2 flex items-center border-b border-gray-200 dark:border-gray-600">
+              <div className="flex space-x-2">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              </div>
+              <div className="flex-1 text-center text-sm font-medium text-gray-600 dark:text-gray-300">
+                Arcto Remote Control
+              </div>
+              <div className="w-6"></div>
+            </div>
+            
+            <div className="p-4 bg-white dark:bg-gray-800 flex flex-col md:flex-row gap-6">
+              {/* Left side - Phone mockup */}
+              <div className="md:w-1/3 flex justify-center">
+                <div className="relative w-48 h-96 bg-gray-900 rounded-3xl overflow-hidden border-8 border-gray-800 shadow-lg">
+                  <div className="absolute top-0 w-24 h-6 bg-gray-800 rounded-b-xl left-1/2 transform -translate-x-1/2"></div>
+                  <div className="h-full w-full bg-blue-50 dark:bg-gray-900 p-2">
+                    <div className="h-full w-full rounded-2xl bg-white dark:bg-gray-800 flex flex-col overflow-hidden">
+                      <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center">
+                        <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white mr-3">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                        <div className="text-sm font-medium">Arcto Remote</div>
+                      </div>
+                      <div className="flex-1 p-4 flex flex-col items-center justify-center">
+                        <motion.div 
+                          className="w-full h-32 bg-gray-100 dark:bg-gray-700 rounded-lg mb-6 flex items-center justify-center"
+                          animate={{ y: [0, -5, 0] }}
+                          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                        >
+                          <motion.div 
+                            className="w-16 h-16 bg-blue-500 rounded"
+                            animate={{ x: [-20, 20, -20] }}
+                            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                          />
+                        </motion.div>
+                        <div className="grid grid-cols-2 gap-4 w-full">
+                          <motion.div 
+                            className="bg-blue-500 text-white p-3 rounded-lg flex items-center justify-center"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            animate={{ y: [0, -3, 0] }}
+                            transition={{ repeat: Infinity, duration: 2, delay: 0.5 }}
+                          >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                          </motion.div>
+                          <motion.div 
+                            className="bg-blue-500 text-white p-3 rounded-lg flex items-center justify-center"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            animate={{ y: [0, -3, 0] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                          >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </motion.div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Right side - Laptop mockup */}
+              <div className="md:w-2/3">
+                <div className="relative">
+                  <div className="rounded-t-xl bg-gray-800 p-2 flex items-center">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    </div>
+                  </div>
+                  <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-b-xl">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-inner">
+                      <div className="flex items-center mb-4">
+                        <div className="w-8 h-8 bg-blue-500 rounded-lg mr-3 flex items-center justify-center text-white">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                          </svg>
+                        </div>
+                        <div className="text-sm font-medium">Presentation.pptx</div>
+                      </div>
+                      <div className="h-40 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center mb-4">
+                        <motion.div 
+                          className="text-center"
+                          animate={{ opacity: [0.7, 1, 0.7] }}
+                          transition={{ repeat: Infinity, duration: 2 }}
+                        >
+                          <div className="text-2xl font-bold mb-2 text-blue-600 dark:text-blue-400">Slide Title</div>
+                          <div className="flex flex-col space-y-2">
+                            <div className="h-2 w-32 bg-gray-300 dark:bg-gray-600 rounded mx-auto"></div>
+                            <div className="h-2 w-40 bg-gray-300 dark:bg-gray-600 rounded mx-auto"></div>
+                            <div className="h-2 w-24 bg-gray-300 dark:bg-gray-600 rounded mx-auto"></div>
+                          </div>
+                        </motion.div>
+                      </div>
+                      <div className="flex justify-between">
+                        <div className="text-xs text-gray-500 dark:text-gray-400">Connected to Arcto Remote</div>
+                        <div className="flex items-center text-xs text-green-500">
+                          <span className="flex h-2 w-2 relative mr-1">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                          </span>
+                          Active
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
+          </motion.div>
+          <motion.div 
+            className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 px-6 py-2 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 flex items-center"
+            whileHover={{ y: -3, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.3)" }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
             <span className="flex h-3 w-3 relative mr-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
             </span>
             <span className="text-sm font-medium">2,500+ Active Users</span>
-          </div>
+          </motion.div>
         </motion.div>
       </motion.section>
 
@@ -225,55 +391,204 @@ const Home: React.FC = () => {
 
       {/* How It Works Section */}
       <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="text-center mb-16"
+        >
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">How It Works</h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">Get started in three simple steps</p>
-        </div>
+        </motion.div>
         
         <div className="max-w-5xl mx-auto">
           <div className="relative">
             {/* Timeline line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-blue-200 dark:bg-blue-900"></div>
+            <motion.div 
+              initial={{ height: 0 }}
+              whileInView={{ height: "100%" }}
+              transition={{ duration: 1.5 }}
+              viewport={{ once: true }}
+              className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-400 to-indigo-600 dark:from-blue-500 dark:to-indigo-700"
+            />
             
             {/* Steps */}
             {[
               {
                 title: "Download & Install",
                 description: "Download the Arcto desktop application and install it on your computer.",
-                image: "/images/download-step.png"
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                ),
+                windowContent: (
+                  <div className="p-4 bg-white dark:bg-gray-800 rounded-b-lg">
+                    <div className="animate-pulse flex space-x-4 mb-4">
+                      <div className="flex-1 space-y-4 py-1">
+                        <div className="h-4 bg-blue-200 dark:bg-blue-700 rounded w-3/4"></div>
+                        <div className="space-y-2">
+                          <div className="h-4 bg-blue-100 dark:bg-blue-800 rounded"></div>
+                          <div className="h-4 bg-blue-100 dark:bg-blue-800 rounded w-5/6"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-6 flex justify-center">
+                      <motion.div 
+                        className="w-32 h-10 bg-blue-500 rounded-lg flex items-center justify-center text-white font-medium"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        animate={{ y: [0, -5, 0] }}
+                        transition={{ repeat: Infinity, duration: 2 }}
+                      >
+                        Download
+                      </motion.div>
+                    </div>
+                  </div>
+                )
               },
               {
                 title: "Connect Your Device",
                 description: "Open the app on your computer and scan the QR code with your mobile device or enter the IP address.",
-                image: "/images/connect-step.png"
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                ),
+                windowContent: (
+                  <div className="p-4 bg-white dark:bg-gray-800 rounded-b-lg flex flex-col items-center">
+                    <div className="w-32 h-32 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4 flex items-center justify-center">
+                      <motion.div 
+                        className="w-24 h-24 border-2 border-blue-500 rounded-lg"
+                        animate={{ 
+                          boxShadow: ["0 0 0 0 rgba(59, 130, 246, 0)", "0 0 0 10px rgba(59, 130, 246, 0.3)", "0 0 0 0 rgba(59, 130, 246, 0)"] 
+                        }}
+                        transition={{ repeat: Infinity, duration: 2 }}
+                      >
+                        <div className="grid grid-cols-3 grid-rows-3 gap-1 p-1 h-full w-full">
+                          {[...Array(9)].map((_, i) => (
+                            <div key={i} className="bg-blue-500 rounded-sm"></div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    </div>
+                    <div className="text-center text-gray-600 dark:text-gray-400 text-sm">
+                      Scan with your mobile device
+                    </div>
+                  </div>
+                )
               },
               {
                 title: "Start Presenting",
                 description: "Use your mobile device to control your presentations with intuitive gestures and controls.",
-                image: "/images/present-step.png"
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+                  </svg>
+                ),
+                windowContent: (
+                  <div className="p-4 bg-white dark:bg-gray-800 rounded-b-lg flex items-center justify-center">
+                    <div className="relative w-full max-w-xs">
+                      <div className="bg-gray-200 dark:bg-gray-700 rounded-lg p-4 flex flex-col items-center">
+                        <div className="w-full h-24 bg-blue-100 dark:bg-blue-900 rounded mb-4 flex items-center justify-center">
+                          <motion.div 
+                            className="w-16 h-16 bg-blue-500 rounded"
+                            animate={{ x: [0, 50, 0] }}
+                            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                          />
+                        </div>
+                        <div className="flex space-x-4 mb-2">
+                          <motion.div 
+                            className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            animate={{ y: [0, -3, 0] }}
+                            transition={{ repeat: Infinity, duration: 1.5, delay: 0.5 }}
+                          >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                          </motion.div>
+                          <motion.div 
+                            className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            animate={{ y: [0, -3, 0] }}
+                            transition={{ repeat: Infinity, duration: 1.5 }}
+                          >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </motion.div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
               }
             ].map((step, index) => (
-              <div key={index} className="relative mb-16 last:mb-0">
+              <motion.div 
+                key={index} 
+                className="relative mb-16 last:mb-0"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+                viewport={{ once: true, margin: "-100px" }}
+              >
                 <div className={`flex flex-col md:flex-row items-center ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
                   <div className="md:w-1/2 mb-8 md:mb-0 md:px-8">
-                    <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-                      <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-xl mb-4">
+                    <motion.div 
+                      className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
+                      whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.3)" }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-xl mb-4">
                         {index + 1}
                       </div>
                       <h3 className="text-2xl font-bold mb-3">{step.title}</h3>
                       <p className="text-gray-600 dark:text-gray-400">{step.description}</p>
-                    </div>
+                    </motion.div>
                   </div>
                   <div className="md:w-1/2 md:px-8">
-                    <div className="rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
-                      <img src={step.image || "/images/placeholder.png"} alt={step.title} className="w-full h-auto" />
-                    </div>
+                    <motion.div 
+                      className="rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700"
+                      whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.3)" }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      {/* Window-like component */}
+                      <div className="bg-gray-100 dark:bg-gray-700 p-2 flex items-center border-b border-gray-200 dark:border-gray-600">
+                        <div className="flex space-x-2">
+                          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        </div>
+                        <div className="flex-1 text-center text-sm font-medium text-gray-600 dark:text-gray-300">
+                          Arcto {index === 0 ? "Installer" : index === 1 ? "Setup" : "Remote"}
+                        </div>
+                        <div className="w-6"></div>
+                      </div>
+                      {step.windowContent}
+                    </motion.div>
                   </div>
                 </div>
                 
                 {/* Timeline dot */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-blue-500 rounded-full"></div>
-              </div>
+                <motion.div 
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-blue-500 rounded-full z-10"
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
+                  viewport={{ once: true }}
+                />
+                <motion.div 
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-blue-300 rounded-full z-0"
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 2, opacity: 0 }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  viewport={{ once: true }}
+                />
+              </motion.div>
             ))}
           </div>
         </div>
@@ -294,44 +609,82 @@ const Home: React.FC = () => {
         </motion.div>
         
         <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-8 justify-center max-w-4xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-lg p-6 rounded-xl border border-white/20 flex-1">
-            <h3 className="text-2xl font-bold mb-4">Windows</h3>
+          <motion.div 
+            className="bg-white/10 backdrop-blur-lg p-6 rounded-xl border border-white/20 flex-1"
+            whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.5)" }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold">Windows</h3>
+            </div>
             <p className="mb-6">Compatible with Windows 10 and 11</p>
             <motion.a 
               href="/downloads/arcto-setup.exe" 
-              className="block w-full py-3 px-4 bg-white text-blue-600 rounded-lg font-medium text-center hover:bg-blue-50 transition-colors duration-300"
+              className="block w-full py-3 px-4 bg-white text-blue-600 rounded-lg font-medium text-center hover:bg-blue-50 transition-colors duration-300 group"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
-              Download for Windows
+              <span className="flex items-center justify-center">
+                <svg className="w-5 h-5 mr-2 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download for Windows
+              </span>
             </motion.a>
-          </div>
+          </motion.div>
           
-          <div className="bg-white/10 backdrop-blur-lg p-6 rounded-xl border border-white/20 flex-1">
-            <h3 className="text-2xl font-bold mb-4">macOS</h3>
+          <motion.div 
+            className="bg-white/5 backdrop-blur-lg p-6 rounded-xl border border-white/10 flex-1 opacity-70"
+            whileHover={{ y: -5 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center mr-3">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold">macOS</h3>
+            </div>
             <p className="mb-6">Compatible with macOS 11 and later</p>
-            <motion.a 
-              href="/downloads/arcto-mac.dmg" 
-              className="block w-full py-3 px-4 bg-white text-blue-600 rounded-lg font-medium text-center hover:bg-blue-50 transition-colors duration-300"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Download for macOS
-            </motion.a>
-          </div>
+            <div className="block w-full py-3 px-4 bg-gray-400/20 text-white/70 rounded-lg font-medium text-center cursor-not-allowed">
+              <span className="flex items-center justify-center">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Coming Soon
+              </span>
+            </div>
+          </motion.div>
           
-          <div className="bg-white/10 backdrop-blur-lg p-6 rounded-xl border border-white/20 flex-1">
-            <h3 className="text-2xl font-bold mb-4">Linux</h3>
+          <motion.div 
+            className="bg-white/5 backdrop-blur-lg p-6 rounded-xl border border-white/10 flex-1 opacity-70"
+            whileHover={{ y: -5 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center mr-3">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold">Linux</h3>
+            </div>
             <p className="mb-6">Compatible with major Linux distributions</p>
-            <motion.a 
-              href="/downloads/arcto-linux.AppImage" 
-              className="block w-full py-3 px-4 bg-white text-blue-600 rounded-lg font-medium text-center hover:bg-blue-50 transition-colors duration-300"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Download for Linux
-            </motion.a>
-          </div>
+            <div className="block w-full py-3 px-4 bg-gray-400/20 text-white/70 rounded-lg font-medium text-center cursor-not-allowed">
+              <span className="flex items-center justify-center">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Coming Soon
+              </span>
+            </div>
+          </motion.div>
         </motion.div>
         
         <motion.div variants={fadeIn} className="mt-12 text-center">
