@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arcto Controller</title>
+  <style>
+    :root {
+      --primary-color: #3b82f6;
+      --secondary-color: #6366f1;
+      --text-color: #1f2937;
+      --bg-color: #f9fafb;
+      --card-bg: #ffffff;
+      --border-color: #e5e7eb;
+      --success-color: #10b981;
+      --error-color: #ef4444;
+      --radius: 8px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-color: #f9fafb;
+        --bg-color: #111827;
+        --card-bg: #1f2937;
+        --border-color: #374151;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .titlebar {
+      height: 32px;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      -webkit-app-region: drag;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .titlebar-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .container {
+      flex: 1;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      overflow-y: auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+    }
+
+    .ip-display {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .ip-label {
+      font-size: 0.875rem;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    .ip-address {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      text-align: center;
+      padding: 1rem;
+      background-color: rgba(59, 130, 246, 0.1);
+      border-radius: var(--radius);
+      border: 1px dashed var(--primary-color);
+    }
+
+    .status-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--error-color);
+    }
+
+    .status-indicator.connected {
+      background-color: var(--success-color);
+    }
+
+    .status-text {
+      font-size: 0.875rem;
+    }
+
+    .drop-zone {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: var(--primary-color);
+      background-color: rgba(59, 130, 246, 0.05);
+    }
+
+    .drop-icon {
+      font-size: 3rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .drop-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .drop-description {
+      font-size: 0.875rem;
+      opacity: 0.7;
+      max-width: 80%;
+      margin: 0 auto;
+    }
+
+    .button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-1px);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .file-list {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background-color: rgba(59, 130, 246, 0.1);
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+    }
+
+    .file-icon {
+      color: var(--primary-color);
+    }
+
+    .file-name {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .instructions {
+      font-size: 0.875rem;
+      line-height: 1.5;
+      opacity: 0.8;
+    }
+
+    .instructions strong {
+      color: var(--primary-color);
+    }
+
+    .qr-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .qr-code {
+      width: 150px;
+      height: 150px;
+      background-color: white;
+      padding: 0.5rem;
+      border-radius: var(--radius);
+    }
+
+    .qr-label {
+      font-size: 0.875rem;
+      opacity: 0.7;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        padding: 3rem;
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="titlebar">
+    <div class="titlebar-title">Arcto Controller</div>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <div class="logo" style="background-image: url('./public/arcto.png');"></div>
+      <h1 class="title">Arcto Controller</h1>
+    </div>
+
+    <div class="main-content">
+      <div class="card ip-display">
+        <div class="ip-label">Your device IP address:</div>
+        <div class="ip-address" id="ip-address">Loading...</div>
+        
+        <div class="status-container">
+          <div class="status-indicator" id="status-indicator"></div>
+          <div class="status-text" id="status-text">Disconnected</div>
+        </div>
+
+        <div class="qr-container">
+          <div class="qr-label">Scan to connect:</div>
+          <div class="qr-code" id="qr-code"></div>
+        </div>
+
+        <div class="instructions">
+          <p>To connect your mobile device:</p>
+          <ol>
+            <li>Open the Arcto Remote PWA on your mobile device</li>
+            <li>Enter the IP address shown above</li>
+            <li>Or scan the QR code with your camera</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-icon">📄</div>
+          <div class="drop-title">Drop presentation files here</div>
+          <div class="drop-description">or click to browse files</div>
+          <button class="button" id="browse-button">
+            <span>Browse Files</span>
+          </button>
+        </div>
+
+        <div class="file-list" id="file-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // DOM elements
+    const ipAddressElement = document.getElementById('ip-address');
+    const statusIndicator = document.getElementById('status-indicator');
+    const statusText = document.getElementById('status-text');
+    const dropZone = document.getElementById('drop-zone');
+    const browseButton = document.getElementById('browse-button');
+    const fileList = document.getElementById('file-list');
+    const qrCode = document.getElementById('qr-code');
+
+    // Function to find WiFi IPv4 address directly in the browser
+    async function findIPAddress() {
+      try {
+        // First try using the WebRTC method to get local IP
+        const pc = new RTCPeerConnection({ iceServers: [] });
+        pc.createDataChannel('');
+        
+        // Create offer and set local description
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        
+        // Wait for ICE candidate gathering
+        const ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3})/;
+        let ipAddress = 'Loading...';
+        let foundWifiIP = false;
+        
+        // Store all potential IPs to choose WiFi over Ethernet
+        const potentialIPs = [];
+        
+        pc.onicecandidate = (ice) => {
+          if (ice.candidate) {
+            const matches = ipRegex.exec(ice.candidate.candidate);
+            if (matches && matches.length > 1) {
+              const potentialIP = matches[1];
+              
+              // Only consider private network IPs
+              if (potentialIP.startsWith('192.168.') || 
+                  potentialIP.startsWith('10.') || 
+                  potentialIP.startsWith('172.16.') || 
+                  potentialIP.startsWith('172.17.') || 
+                  potentialIP.startsWith('172.18.') || 
+                  potentialIP.startsWith('172.19.') || 
+                  potentialIP.startsWith('172.20.') || 
+                  potentialIP.startsWith('172.21.') || 
+                  potentialIP.startsWith('172.22.') || 
+                  potentialIP.startsWith('172.23.') || 
+                  potentialIP.startsWith('172.24.') || 
+                  potentialIP.startsWith('172.25.') || 
+                  potentialIP.startsWith('172.26.') || 
+                  potentialIP.startsWith('172.27.') || 
+                  potentialIP.startsWith('172.28.') || 
+                  potentialIP.startsWith('172.29.') || 
+                  potentialIP.startsWith('172.30.') || 
+                  potentialIP.startsWith('172.31.')) {
+                
+                // Prioritize WiFi IPs (typically 192.168.x.x for home networks)
+                if (potentialIP.startsWith('192.168.')) {
+                  // Most likely a WiFi connection
+                  ipAddress = potentialIP;
+                  foundWifiIP = true;
+                  ipAddressElement.textContent = ipAddress;
+                  
+                  // Generate QR code for the connection URL
+                  const connectionUrl = `http://${ipAddress}:3000`;
+                  generateQRCode(connectionUrl);
+                } else {
+                  // Store other IPs as fallback
+                  potentialIPs.push(potentialIP);
+                }
+              }
+            }
+          }
+          
+          // If we've found a WiFi IP, we can close the connection
+          if (foundWifiIP) {
+            pc.close();
+          }
+        };
+        
+        // Fallback to other IPs or electron IPC if available
+        setTimeout(() => {
+          if (ipAddressElement.textContent === 'Loading...') {
+            // If we didn't find a WiFi IP but have other private IPs, use the first one
+            if (potentialIPs.length > 0) {
+              const fallbackIP = potentialIPs[0];
+              ipAddressElement.textContent = fallbackIP + ' (Not WiFi)';
+              
+              // Generate QR code for the connection URL
+              const connectionUrl = `http://${fallbackIP}:3000`;
+              generateQRCode(connectionUrl);
+            }
+            // If no private IPs found at all, try electron IPC
+            else if (window.electron) {
+              window.electron.receive('ip-address', (ipAddress) => {
+                ipAddressElement.textContent = ipAddress;
+                
+                // Generate QR code for the connection URL
+                const connectionUrl = `http://${ipAddress}:3000`;
+                generateQRCode(connectionUrl);
+              });
+            } else {
+              ipAddressElement.textContent = 'Could not detect WiFi IP';
+            }
+          }
+          
+          // Close the peer connection if still open
+          if (pc.connectionState !== 'closed') {
+            pc.close();
+          }
+        }, 3000); // Wait 3 seconds for WebRTC before falling back
+        
+      } catch (error) {
+        console.error('Error finding IP address:', error);
+        
+        // Check if we have any potential IPs from before the error
+        if (potentialIPs && potentialIPs.length > 0) {
+          const fallbackIP = potentialIPs[0];
+          ipAddressElement.textContent = fallbackIP + ' (Not WiFi)';
+          
+          // Generate QR code for the connection URL
+          const connectionUrl = `http://${fallbackIP}:3000`;
+          generateQRCode(connectionUrl);
+        }
+        // Fallback to electron IPC
+        else if (window.electron) {
+          window.electron.receive('ip-address', (ipAddress) => {
+            // Check if it looks like a WiFi IP
+            const isLikelyWifi = ipAddress.startsWith('192.168.');
+            ipAddressElement.textContent = ipAddress + (isLikelyWifi ? '' : ' (Not WiFi)');
+            
+            // Generate QR code for the connection URL
+            const connectionUrl = `http://${ipAddress}:3000`;
+            generateQRCode(connectionUrl);
+          });
+        } else {
+          ipAddressElement.textContent = 'Could not detect WiFi IP';
+        }
+      }
+    }
+    
+    // Call the function to find IP address
+    findIPAddress();
+    
+    // Also listen for IP address from main process as backup
+    if (window.electron) {
+      window.electron.receive('ip-address', (ipAddress) => {
+        if (ipAddressElement.textContent === 'Loading...' || 
+            ipAddressElement.textContent === 'Could not detect IP') {
+          ipAddressElement.textContent = ipAddress;
+          
+          // Generate QR code for the connection URL
+          const connectionUrl = `http://${ipAddress}:3000`;
+          generateQRCode(connectionUrl);
+        }
+      });
+    }
+
+    // Listen for connection status updates
+    window.electron.receive('connection-status', (isConnected) => {
+      if (isConnected) {
+        statusIndicator.classList.add('connected');
+        statusText.textContent = 'Connected';
+      } else {
+        statusIndicator.classList.remove('connected');
+        statusText.textContent = 'Disconnected';
+      }
+    });
+
+    // Listen for remote commands
+    window.electron.receive('remote-command', (command) => {
+      console.log('Received command:', command);
+      // Handle remote commands here
+    });
+
+    // Listen for selected files
+    window.electron.receive('selected-files', (files) => {
+      updateFileList(files);
+    });
+
+    // File browsing
+    browseButton.addEventListener('click', () => {
+      window.electron.send('open-file-dialog');
+    });
+
+    // Drag and drop handling
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.classList.remove('drag-over');
+      
+      const files = [];
+      if (e.dataTransfer.items) {
+        // Use DataTransferItemList interface
+        for (let i = 0; i < e.dataTransfer.items.length; i++) {
+          if (e.dataTransfer.items[i].kind === 'file') {
+            const file = e.dataTransfer.items[i].getAsFile();
+            files.push(file.path);
+          }
+        }
+      } else {
+        // Use DataTransfer interface
+        for (let i = 0; i < e.dataTransfer.files.length; i++) {
+          files.push(e.dataTransfer.files[i].path);
+        }
+      }
+      
+      if (files.length > 0) {
+        window.electron.send('files-dropped', files);
+        updateFileList(files);
+      }
+    });
+
+    // Update file list UI
+    function updateFileList(files) {
+      fileList.innerHTML = '';
+      
+      files.forEach(file => {
+        const fileName = file.split(/[\\/]/).pop();
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.innerHTML = `
+          <span class="file-icon">📄</span>
+          <span class="file-name" title="${file}">${fileName}</span>
+        `;
+        fileList.appendChild(fileItem);
+      });
+    }
+
+    // Simple QR code generator (placeholder - would use a library in production)
+    function generateQRCode(data) {
+      // In a real app, you would use a library like qrcode.js
+      // For now, we'll just show a placeholder
+      qrCode.innerHTML = `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="80" height="80" fill="white" />
+          <path d="M20,20 h20 v20 h-20 z M60,20 h20 v20 h-20 z M20,60 h20 v20 h-20 z M40,40 h20 v20 h-20 z M70,50 h10 v10 h-10 z M50,70 h10 v10 h-10 z" fill="black" />
+        </svg>
+      `;
+      qrCode.title = data;
+    }
+  </script>
+</body>
+</html>
